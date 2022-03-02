@@ -1,0 +1,17 @@
+{
+    "name":"asdasd",
+    "studentRequest" : {
+        "age" : 12,
+        "group" : {
+            "marks" : [
+                12,
+                123,
+            ]
+        }
+    }
+}
+
+[
+{},
+{}
+]
