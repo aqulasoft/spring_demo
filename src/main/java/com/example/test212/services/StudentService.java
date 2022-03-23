@@ -76,4 +76,11 @@ public class StudentService {
         student.setName(studentRequest.getName());
         studentRepository.save(student);
     }
+
+    public void deleteStudents(String studentId) throws StudentNotExistException {
+        Optional<StudentEntity> existedStudent = studentRepository.findOptionalById(studentId);
+
+        StudentEntity student = existedStudent.orElseThrow(StudentNotExistException::new);
+        studentRepository.delete(student);
+    }
 }

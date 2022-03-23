@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/students")
@@ -23,8 +24,14 @@ public class StudentController {
     }
 
     @GetMapping("")
-    public List<StudentResponse> getStudents() {
-        return studentService.getStudents();
+    public List<StudentResponse> getStudents(@RequestParam(value = "q", required = false) String q) {
+        List<StudentResponse> students = studentService.getStudents();
+        if (q == null) {
+            return students;
+        }
+        return students.stream()
+                .filter(student -> student.getName().contains(q) || String.valueOf(student.getAge()).contains(q))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -40,5 +47,10 @@ public class StudentController {
     @PutMapping("")
     public void fullUpdateStudent(@RequestBody StudentRequest studentRequest) throws StudentNotExistException {
         studentService.updateStudent(studentRequest);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteStudent(@PathVariable("id") String studentId) throws StudentNotExistException {
+        studentService.deleteStudents(studentId);
     }
 }
