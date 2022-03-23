@@ -65,4 +65,15 @@ public class StudentService {
                 student.getName()
         );
     }
+
+    public void updateStudent(StudentRequest studentRequest) throws StudentNotExistException {
+        if (studentRequest.getId() == null || !studentRepository.existsById(studentRequest.getId())) {
+            throw new StudentNotExistException();
+        }
+
+        StudentEntity student = studentRepository.getById(studentRequest.getId());
+        student.setAge(studentRequest.getAge());
+        student.setName(studentRequest.getName());
+        studentRepository.save(student);
+    }
 }

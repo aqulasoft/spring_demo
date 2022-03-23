@@ -7,10 +7,8 @@ import com.example.test212.controllers.models.StudentResponse;
 import com.example.test212.services.StudentService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/students")
@@ -40,35 +38,7 @@ public class StudentController {
     }
 
     @PutMapping("")
-    public String fullUpdateStudent(@RequestBody StudentRequest studentRequest) {
-        savedStudents.put(studentRequest.getId(), studentRequest);
-        return studentRequest.getId();
-    }
-
-    @PatchMapping("/{id}")
-    public StudentResponse changeUser(
-            @PathVariable("id") String studentId,
-            @RequestBody StudentRequest studentRequest) throws StudentNotExistException {
-
-        if (!savedStudents.containsKey(studentId)) {
-            throw new StudentNotExistException();
-        }
-
-        StudentRequest student = savedStudents.get(studentId);
-        student.setAge(studentRequest.getAge());
-        student.setName(studentRequest.getName());
-        return convertToResponse(studentId, studentRequest);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    //                      private
-    ///////////////////////////////////////////////////////////////////////////
-
-    private StudentResponse convertToResponse(String id, StudentRequest studentRequest) {
-        StudentResponse studentResponse = new StudentResponse();
-        studentResponse.setId(id);
-        studentResponse.setName(studentRequest.getName());
-        studentResponse.setAge(studentRequest.getAge());
-        return studentResponse;
+    public void fullUpdateStudent(@RequestBody StudentRequest studentRequest) throws StudentNotExistException {
+        studentService.updateStudent(studentRequest);
     }
 }
