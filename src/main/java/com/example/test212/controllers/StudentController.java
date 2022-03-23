@@ -26,22 +26,12 @@ public class StudentController {
 
     @GetMapping("")
     public List<StudentResponse> getStudents() {
-        ArrayList<StudentResponse> result = new ArrayList<>();
-        for (Map.Entry<String, StudentRequest> entry : savedStudents.entrySet()) {
-            result.add(convertToResponse(entry.getKey(), entry.getValue()));
-        }
-        return result;
+        return studentService.getStudents();
     }
 
     @GetMapping("/{id}")
     public StudentResponse getStudent(@PathVariable("id") String studentId) throws StudentNotExistException {
-
-        if (!savedStudents.containsKey(studentId)) {
-            throw new StudentNotExistException();
-        }
-
-        StudentResponse result = convertToResponse(studentId, savedStudents.get(studentId));
-        return result;
+        return studentService.getStudents(studentId);
     }
 
     @PostMapping("")
