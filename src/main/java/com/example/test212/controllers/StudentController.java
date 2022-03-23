@@ -1,8 +1,10 @@
 package com.example.test212.controllers;
 
+import com.example.test212.controllers.exceptions.StudentExistException;
 import com.example.test212.controllers.exceptions.StudentNotExistException;
 import com.example.test212.controllers.models.StudentRequest;
 import com.example.test212.controllers.models.StudentResponse;
+import com.example.test212.services.StudentService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -14,7 +16,13 @@ import java.util.Map;
 @RequestMapping("/api/students")
 public class StudentController {
 
+    private final StudentService studentService;
+
     private HashMap<String, StudentRequest> savedStudents = new HashMap<>();
+
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     @GetMapping("")
     public List<StudentResponse> getStudents() {
@@ -37,10 +45,8 @@ public class StudentController {
     }
 
     @PostMapping("")
-    public String saveStudent(@RequestBody StudentRequest studentRequest) {
-        String id = String.valueOf(savedStudents.size());
-        savedStudents.put(id, studentRequest);
-        return id;
+    public String saveStudent(@RequestBody StudentRequest studentRequest) throws StudentExistException {
+        return studentService.saveStudent(studentRequest).getId();
     }
 
     @PutMapping("")
