@@ -28,7 +28,7 @@ public class User {
     private int age;
     private String name;
 
-    private String login;
+    private String email;
     private String password;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -40,11 +40,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(addDate, user.addDate) && Objects.equals(age, user.age) && Objects.equals(name, user.name) && login.equals(user.login) && password.equals(user.password);
+        return Objects.equals(id, user.id) && Objects.equals(addDate, user.addDate) && Objects.equals(age, user.age) && Objects.equals(name, user.name) && email.equals(user.email) && password.equals(user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, addDate, age, name, login, password);
+        return Objects.hash(id, addDate, age, name, email, password);
     }
 }
