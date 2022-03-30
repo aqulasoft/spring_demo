@@ -4,6 +4,8 @@ import com.example.test212.controllers.exceptions.StudentExistException;
 import com.example.test212.controllers.exceptions.StudentNotExistException;
 import com.example.test212.controllers.models.StudentRequest;
 import com.example.test212.controllers.models.StudentDto;
+import com.example.test212.database.entities.User;
+import com.example.test212.security.models.OurAuthToken;
 import com.example.test212.services.StudentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/students")
+@RequestMapping("/api/private/students")
 public class StudentController {
 
     private final StudentService studentService;
@@ -40,7 +42,7 @@ public class StudentController {
     }
 
     @PostMapping("")
-    public String saveStudent(@RequestBody StudentRequest studentRequest) throws StudentExistException {
+    public String saveStudent(@RequestBody StudentRequest studentRequest, OurAuthToken ourAuthToken) throws StudentExistException {
         return studentService.saveStudent(studentRequest).getId();
     }
 

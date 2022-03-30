@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -32,6 +34,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/registration/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterAfter(mainAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(
+                        mainAuthFilter.setRequireAuthMatcher(
+                                new AndRequestMatcher(new AntPathRequestMatcher("/api/private/**"))
+                        ),
+                        UsernamePasswordAuthenticationFilter.class
+                );
     }
 }
