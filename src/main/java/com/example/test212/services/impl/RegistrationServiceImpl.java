@@ -28,7 +28,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public UserDto signup(RegistrationParamsRequest registrationParamsRequest) throws UserAlreadyExistException {
         Optional<User> existedUser = userRepository.findOptionalByEmail(registrationParamsRequest.getEmail());
-        existedUser.orElseThrow(UserAlreadyExistException::new);
+        if (existedUser.isPresent()) {
+            throw new UserAlreadyExistException();
+        }
 
         User user = mapper.map(registrationParamsRequest, User.class);
         String password = passwordEncoder.encode(user.getPassword() + "sada");
