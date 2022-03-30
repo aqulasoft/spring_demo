@@ -6,6 +6,7 @@ import com.example.test212.controllers.models.StudentRequest;
 import com.example.test212.controllers.models.StudentResponse;
 import com.example.test212.database.entities.StudentEntity;
 import com.example.test212.database.repositories.StudentRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +16,11 @@ import java.util.stream.Collectors;
 @Service
 public class StudentService {
 
+    private final ModelMapper mapper;
     private final StudentRepository studentRepository;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(ModelMapper mapper, StudentRepository studentRepository) {
+        this.mapper = mapper;
         this.studentRepository = studentRepository;
     }
 
@@ -30,27 +33,17 @@ public class StudentService {
             throw new StudentExistException();
         }
 
-        StudentEntity newStudent = new StudentEntity();
-        newStudent.setAge(studentRequest.getAge());
-        newStudent.setName(studentRequest.getName());
+        StudentEntity newStudent = mapper.map(studentRequest, StudentEntity.class);
         studentRepository.save(newStudent);
 
-        return new StudentResponse(
-                newStudent.getId(),
-                newStudent.getAge(),
-                newStudent.getName()
-        );
+        return mapper.map(newStudent, StudentResponse.class);
     }
 
     public List<StudentResponse> getStudents() {
         List<StudentEntity> allStudents = studentRepository.findAll();
 
         return allStudents.stream()
-                .map(studentEntity -> new StudentResponse(
-                        studentEntity.getId(),
-                        studentEntity.getAge(),
-                        studentEntity.getName()
-                ))
+                .map(studentEntity -> mapper.map(studentEntity, StudentResponse.class))
                 .collect(Collectors.toList());
     }
 
@@ -58,12 +51,7 @@ public class StudentService {
         Optional<StudentEntity> existedStudent = studentRepository.findOptionalById(studentId);
 
         StudentEntity student = existedStudent.orElseThrow(StudentNotExistException::new);
-
-        return new StudentResponse(
-                student.getId(),
-                student.getAge(),
-                student.getName()
-        );
+        return mapper.map(student, StudentResponse.class);
     }
 
     public void updateStudent(StudentRequest studentRequest) throws StudentNotExistException {
