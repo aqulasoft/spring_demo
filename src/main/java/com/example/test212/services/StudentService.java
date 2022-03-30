@@ -3,7 +3,7 @@ package com.example.test212.services;
 import com.example.test212.controllers.exceptions.StudentExistException;
 import com.example.test212.controllers.exceptions.StudentNotExistException;
 import com.example.test212.controllers.models.StudentRequest;
-import com.example.test212.controllers.models.StudentResponse;
+import com.example.test212.controllers.models.StudentDto;
 import com.example.test212.database.entities.StudentEntity;
 import com.example.test212.database.repositories.StudentRepository;
 import org.modelmapper.ModelMapper;
@@ -28,7 +28,7 @@ public class StudentService {
     //                      public
     ///////////////////////////////////////////////////////////////////////////
 
-    public StudentResponse saveStudent(StudentRequest studentRequest) throws StudentExistException {
+    public StudentDto saveStudent(StudentRequest studentRequest) throws StudentExistException {
         if (studentRequest.getId() != null && studentRepository.existsById(studentRequest.getId())) {
             throw new StudentExistException();
         }
@@ -36,22 +36,22 @@ public class StudentService {
         StudentEntity newStudent = mapper.map(studentRequest, StudentEntity.class);
         studentRepository.save(newStudent);
 
-        return mapper.map(newStudent, StudentResponse.class);
+        return mapper.map(newStudent, StudentDto.class);
     }
 
-    public List<StudentResponse> getStudents() {
+    public List<StudentDto> getStudents() {
         List<StudentEntity> allStudents = studentRepository.findAll();
 
         return allStudents.stream()
-                .map(studentEntity -> mapper.map(studentEntity, StudentResponse.class))
+                .map(studentEntity -> mapper.map(studentEntity, StudentDto.class))
                 .collect(Collectors.toList());
     }
 
-    public StudentResponse getStudents(String studentId) throws StudentNotExistException {
+    public StudentDto getStudents(String studentId) throws StudentNotExistException {
         Optional<StudentEntity> existedStudent = studentRepository.findOptionalById(studentId);
 
         StudentEntity student = existedStudent.orElseThrow(StudentNotExistException::new);
-        return mapper.map(student, StudentResponse.class);
+        return mapper.map(student, StudentDto.class);
     }
 
     public void updateStudent(StudentRequest studentRequest) throws StudentNotExistException {

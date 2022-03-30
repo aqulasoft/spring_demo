@@ -3,7 +3,7 @@ package com.example.test212.controllers;
 import com.example.test212.controllers.exceptions.StudentExistException;
 import com.example.test212.controllers.exceptions.StudentNotExistException;
 import com.example.test212.controllers.models.StudentRequest;
-import com.example.test212.controllers.models.StudentResponse;
+import com.example.test212.controllers.models.StudentDto;
 import com.example.test212.services.StudentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +24,8 @@ public class StudentController {
     }
 
     @GetMapping("")
-    public List<StudentResponse> getStudents(@RequestParam(value = "q", required = false) String q) {
-        List<StudentResponse> students = studentService.getStudents();
+    public List<StudentDto> getStudents(@RequestParam(value = "q", required = false) String q) {
+        List<StudentDto> students = studentService.getStudents();
         if (q == null) {
             return students;
         }
@@ -35,7 +35,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public StudentResponse getStudent(@PathVariable("id") String studentId) throws StudentNotExistException {
+    public StudentDto getStudent(@PathVariable("id") String studentId) throws StudentNotExistException {
         return studentService.getStudents(studentId);
     }
 
